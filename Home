@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نموذج تسجيل متعدد</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      direction: rtl;
+    }
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>نموذج تسجيل متعدد</h2>
+    <input type="text" id="name" placeholder="الاسم الكامل" />
+    <input type="tel" id="phone" placeholder="رقم الهاتف" />
+    <input type="text" id="address" placeholder="العنوان" />
+    <textarea id="status" placeholder="الحالة"></textarea>
+    <button onclick="addEntry()">إرسال وتسجيل</button>
+    <button onclick="downloadExcel()">تحميل كل البيانات</button>
+  </div>
+
+  <!-- SheetJS Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    // مصفوفة لحفظ جميع البيانات المُدخلة
+    const allData = [
+      ['الاسم الكامل', 'رقم الهاتف', 'العنوان', 'الحالة']
+    ];
+
+    function addEntry() {
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+      const status = document.getElementById('status').value;
+
+      if (!name || !phone || !address || !status) {
+        alert('يرجى تعبئة جميع الحقول');
+        return;
+      }
+
+      // إضافة البيانات إلى المصفوفة
+      allData.push([name, phone, address, status]);
+
+      // مسح النموذج للسماح بإدخال شخص جديد
+      document.getElementById('name').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('address').value = '';
+      document.getElementById('status').value = '';
+
+      alert("تم حفظ البيانات! يمكنك الآن إدخال شخص آخر.");
+    }
+
+    function downloadExcel() {
+      const ws = XLSX.utils.aoa_to_sheet(allData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'البيانات');
+      XLSX.writeFile(wb, 'جميع_البيانات.xlsx');
+    }
+  </script>
+
+</body>
+</html>
